@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include "memory_management.h"
+#include <memory_management/memory_management.h>
 
 #define MEMORY_MANAGEMENT_PROTOTYPE_INTERAL (memory_management_prototype_internal)
 #define _MEMORY_MANAGEMENT_INTERNAL_TYPE struct _memory_management_attributes_internal
@@ -66,7 +66,7 @@ void memory_management_attributes_set_dealloc_function(void *o, void (*deallocf)
 	object->dealloc = deallocf;
 }
 
-unsigned long long memory_management_get_retain_count(void *o) {
+unsigned long long memory_management_get_retain_count(const void *o) {
 	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
 	return object->retainCount;
 }

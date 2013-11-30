@@ -22,6 +22,7 @@ extern "C" {
 #define MEMORY_MANAGEMENT_ISA(o) ((o)->_isa)
 #define MEMORY_MANAGEMENT_RETAIN(o) memory_management_retain((o))
 #define MEMORY_MANAGEMENT_RELEASE(o) memory_management_release((o))
+#define MEMORY_MANAGEMENT_GET_RETAIN_COUNT(o) memory_management_get_retain_count((o))
 
 /* Use this to set enable memory management on you structure */
 #define MEMORY_MANAGEMENT_ENABLE() MEMORY_MANAGEMENT_TYPE _isa
@@ -41,7 +42,7 @@ extern "C" {
 	
 void *memory_management_retain(void *);
 void memory_management_release(void *);
-unsigned long long memory_management_get_retain_count(void *);
+unsigned long long memory_management_get_retain_count(const void *);
 
 /* Use this to set a custom destructor */
 typedef void (*deallocf)(void *);
