@@ -7,17 +7,54 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DE14C317184B7064008D6559 /* testMemoryManagement.c in Sources */ = {isa = PBXBuildFile; fileRef = DE14C305184B6FAF008D6559 /* testMemoryManagement.c */; };
+		DE14C318184B7065008D6559 /* Point.c in Sources */ = {isa = PBXBuildFile; fileRef = DE14C308184B7022008D6559 /* Point.c */; };
+		DE14C31B184B7075008D6559 /* libmemorymanagement.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE89853D184A6C6E006C371B /* libmemorymanagement.a */; };
 		DE89854A184A6CC7006C371B /* memory_management.c in Sources */ = {isa = PBXBuildFile; fileRef = DE898549184A6CC7006C371B /* memory_management.c */; };
 		DE898569184A7D07006C371B /* memory_management.h in Headers */ = {isa = PBXBuildFile; fileRef = DE898565184A7B86006C371B /* memory_management.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		DE14C319184B7070008D6559 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DE898535184A6C6E006C371B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DE89853C184A6C6E006C371B;
+			remoteInfo = memorymanagement;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DE14C30C184B7055008D6559 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		DE14C305184B6FAF008D6559 /* testMemoryManagement.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = testMemoryManagement.c; path = test/testMemoryManagement.c; sourceTree = "<group>"; };
+		DE14C307184B7017008D6559 /* Point.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Point.h; path = test/Point.h; sourceTree = "<group>"; };
+		DE14C308184B7022008D6559 /* Point.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Point.c; path = test/Point.c; sourceTree = "<group>"; };
+		DE14C30E184B7055008D6559 /* testMemoryManagement */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = testMemoryManagement; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE89853D184A6C6E006C371B /* libmemorymanagement.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmemorymanagement.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE898549184A6CC7006C371B /* memory_management.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = memory_management.c; path = src/memory_management.c; sourceTree = "<group>"; };
 		DE898565184A7B86006C371B /* memory_management.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = memory_management.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		DE14C30B184B7055008D6559 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DE14C31B184B7075008D6559 /* libmemorymanagement.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DE89853A184A6C6E006C371B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -40,6 +77,7 @@
 			isa = PBXGroup;
 			children = (
 				DE89853D184A6C6E006C371B /* libmemorymanagement.a */,
+				DE14C30E184B7055008D6559 /* testMemoryManagement */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -49,6 +87,7 @@
 			children = (
 				DE898545184A6C85006C371B /* include */,
 				DE898546184A6C90006C371B /* src */,
+				DECF62A7184B667D00EE1F96 /* test */,
 			);
 			name = Files;
 			sourceTree = "<group>";
@@ -78,6 +117,16 @@
 			path = include/memory_management;
 			sourceTree = "<group>";
 		};
+		DECF62A7184B667D00EE1F96 /* test */ = {
+			isa = PBXGroup;
+			children = (
+				DE14C305184B6FAF008D6559 /* testMemoryManagement.c */,
+				DE14C307184B7017008D6559 /* Point.h */,
+				DE14C308184B7022008D6559 /* Point.c */,
+			);
+			name = test;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -92,6 +141,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		DE14C30D184B7055008D6559 /* testMemoryManagement */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DE14C314184B7055008D6559 /* Build configuration list for PBXNativeTarget "testMemoryManagement" */;
+			buildPhases = (
+				DE14C30A184B7055008D6559 /* Sources */,
+				DE14C30B184B7055008D6559 /* Frameworks */,
+				DE14C30C184B7055008D6559 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DE14C31A184B7070008D6559 /* PBXTargetDependency */,
+			);
+			name = testMemoryManagement;
+			productName = testMemoryManagement;
+			productReference = DE14C30E184B7055008D6559 /* testMemoryManagement */;
+			productType = "com.apple.product-type.tool";
+		};
 		DE89853C184A6C6E006C371B /* memorymanagement */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DE898541184A6C6E006C371B /* Build configuration list for PBXNativeTarget "memorymanagement" */;
@@ -131,11 +198,21 @@
 			projectRoot = "";
 			targets = (
 				DE89853C184A6C6E006C371B /* memorymanagement */,
+				DE14C30D184B7055008D6559 /* testMemoryManagement */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		DE14C30A184B7055008D6559 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DE14C317184B7064008D6559 /* testMemoryManagement.c in Sources */,
+				DE14C318184B7065008D6559 /* Point.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DE898539184A6C6E006C371B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -146,7 +223,33 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		DE14C31A184B7070008D6559 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DE89853C184A6C6E006C371B /* memorymanagement */;
+			targetProxy = DE14C319184B7070008D6559 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		DE14C315184B7055008D6559 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		DE14C316184B7055008D6559 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		DE89853F184A6C6E006C371B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -248,6 +351,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		DE14C314184B7055008D6559 /* Build configuration list for PBXNativeTarget "testMemoryManagement" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DE14C315184B7055008D6559 /* Debug */,
+				DE14C316184B7055008D6559 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		DE898538184A6C6E006C371B /* Build configuration list for PBXProject "memorymanagement" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

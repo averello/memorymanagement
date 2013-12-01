@@ -1,10 +1,11 @@
 CC = gcc
 CFLAGS_PRIV = -Wall -Wextra -g3 -pedantic -std=c99 -I${INC} -D_XOPEN_SOURCE=700 $(CFLAGS)
-LDFLAGS_PRIV = $(LDFLAGS)
+LDFLAGS_PRIV = -L$(LIB) -lmemorymanagement $(LDFLAGS)
 BIN = bin
 INC = include
 OBJ = obj
 SRC = src
+TEST = test
 MKDIR = mkdir
 
 LIB = lib
@@ -31,17 +32,29 @@ endif
 all: directories compileall
 
 # +-------------+
-# | Cible test1 |
+# | Cible test  |
 # +-------------+
 
-TEST1 = main
-test1: directories libstatic ${BIN}/${TEST1}
-	@echo "**** Testing ${TEST1}"
-	@${BIN}/${TEST1}
-	@echo "---- end of ${TEST1}"
+TESTS = $(patsubst $(TEST)/%.c,$(BIN)/%,$(wildcard $(TEST)/test*.c))
+tests : directories libstatic $(TESTS)
+	@for test in ${TESTS}; do \
+		echo "**** Testing $$test"; \
+	echo "---- end of ${TESTSTRING}"; \
+	done
+	@#	./"$$test" \
+
+test% : $(OBJ)/Point.o $(BIN)/test% 
+	@echo "**** Testing $@";
+	@$(BIN)/$@
+	@echo "end of $@";
 
 
-libstatic: directories $(LIB)/lib$(LIB_NAME).a
+valgrind% : $(BIN)/test%
+	@valgrind  --track-origins=yes --leak-check=full --show-reachable=yes $<
+
+
+MEMORYMANAGEMENTSTATIC = ${LIB}/lib$(LIB_NAME).a
+libstatic : directories $(MEMORYMANAGEMENTSTATIC)
 
 valgrind% : $(BIN)/%
 	@valgrind  --track-origins=yes --leak-check=full --show-reachable=yes $<
@@ -67,12 +80,18 @@ ${LIB}:
 ${OBJ}/%.o : ${SRC}/%.c
 	$(CC) -c -o $@ $< ${CFLAGS_PRIV}
 
+${OBJ}/%.o : ${TEST}/%.c
+	$(CC) -c -o $@ $< ${CFLAGS_PRIV}
+
+${BIN}/% : ${OBJ}/%.o $(OBJ)/Point.o
+	${CC} -o $@ $^ ${LDFLAGS_PRIV}
+
 ${BIN}/% : ${OBJ}/%.o
 	${CC} -o $@ $< ${LDFLAGS_PRIV}
 
+
 ${LIB}/lib${LIB_NAME}.a : $(OBJ)/memory_management.o 
 	${AR} r ${LIB}/lib${LIB_NAME}.a $?
-
 
 # +------------------+
 # | Cible compileall |
