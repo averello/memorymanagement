@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>8FC92806-8BE9-4BB6-8854-9EEB1D89EDD4</string>
+	<key>IDESourceControlProjectName</key>
+	<string>memorymanagement</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>E0ADDBD7-9005-4F4C-8A0B-BC527009D0FA</key>
+		<string>ssh://averellovps/memorymanagement.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>memorymanagement.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>E0ADDBD7-9005-4F4C-8A0B-BC527009D0FA</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://averellovps/memorymanagement.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>E0ADDBD7-9005-4F4C-8A0B-BC527009D0FA</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>E0ADDBD7-9005-4F4C-8A0B-BC527009D0FA</string>
+			<key>IDESourceControlWCCName</key>
+			<string>memorymanagement</string>
+		</dict>
+	</array>
+</dict>
+</plist>
