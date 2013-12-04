@@ -9,62 +9,38 @@
 #define _memory_management_h
 
 #define _XOPEN_SOURCE 700
+#define MEMORY_MANAGEMENT_ENVIRONMENT 1
 
 #include <pthread.h>
 
-#ifdef _cplusplus 
+#ifdef __cplusplus
 extern "C" {
 #endif
-	
-#define MEMORY_MANAGEMENT_ENVIRONMENT 1
-	
-#define MEMORY_MANAGEMENT_INFERED_OPAQUE_SIZE ( ((2 * sizeof(unsigned long long)) + (1 * sizeof(void*))) / sizeof(void*))
 
-#define MEMORY_MANAGEMENT_PROTOTYPE (memory_management_prototype)
-#define MEMORY_MANAGEMENT_TYPE struct memory_management_attributes
-#define MEMORY_MANAGEMENT_ISA_NAME _isa
-
-#define MEMORY_MANAGEMENT_ISA(o) ((o)->MEMORY_MANAGEMENT_ISA_NAME)
-	
 #define MEMORY_MANAGEMENT_RETAIN(o) memory_management_retain((o))
 #define MEMORY_MANAGEMENT_RELEASE(o) memory_management_release((o))
 #define MEMORY_MANAGEMENT_GET_RETAIN_COUNT(o) memory_management_get_retain_count((o))
-#define MEMORY_MANAGEMENT_ATTRIBUTE_SET_DEALLOC_FUNCTION(o) memory_management_attributes_set_dealloc_function((o))
-
-/* Use this to set enable memory management on you structure */
-#define MEMORY_MANAGEMENT_ENABLE() MEMORY_MANAGEMENT_TYPE MEMORY_MANAGEMENT_ISA_NAME
 	
-/* Use this to initialize the memory management system on you allocated instance */
-#define MEMORY_MANAGEMENT_INITIALIZE(o) MEMORY_MANAGEMENT_ISA(o) = MEMORY_MANAGEMENT_PROTOTYPE;
+/* Use this to set the dealloc function */
+#define MEMORY_MANAGEMENT_ATTRIBUTE_SET_DEALLOC_FUNCTION(o, function) memory_management_attributes_set_dealloc_function((o), (function))
 
-	
+/* Use this allocate memory */
+#define MEMORY_MANAGEMENT_ALLOC(size) memory_management_alloc((size))
 /* Use this to retain (increment) a reference */
 #define retain(o) MEMORY_MANAGEMENT_RETAIN((o))
 /* Use this to release (decrement) a reference */
 #define release(o) MEMORY_MANAGEMENT_RELEASE((o))
- 
 	
-//typedef void *(*retainf)(void *);
-//typedef void (*releasef)(void *);
+	void *memory_management_alloc(size_t size);
+	void *memory_management_retain(void *);
+	void memory_management_release(void *);
+	unsigned long long memory_management_get_retain_count(const void *);
 	
-void *memory_management_retain(void *);
-void memory_management_release(void *);
-unsigned long long memory_management_get_retain_count(const void *);
-
-/* Use this to set a custom destructor */
-typedef void (*deallocf)(void *);
-void memory_management_attributes_set_dealloc_function(void *, deallocf);
-
+	/* Use this to set a custom destructor */
+	typedef void (*deallocf)(void *);
+	void memory_management_attributes_set_dealloc_function(void *, deallocf);
 	
-MEMORY_MANAGEMENT_TYPE {
-	void *_opaque[MEMORY_MANAGEMENT_INFERED_OPAQUE_SIZE];
-};
-
-extern MEMORY_MANAGEMENT_TYPE MEMORY_MANAGEMENT_PROTOTYPE;
-
-#undef MEMORY_MANAGEMENT_INFERED_OPAQUE_SIZE
-	
-#ifdef _cplusplus 
+#ifdef __cplusplus
 }
 #endif /* _cplusplus */
 #endif /* _memory_management_h */

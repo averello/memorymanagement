@@ -11,8 +11,7 @@
 #include "Point.h"
 
 Point *allocatePoint(int x, int y) {
-	Point *point = calloc(1, sizeof(Point));
-	MEMORY_MANAGEMENT_INITIALIZE(point);
+	Point *point = MEMORY_MANAGEMENT_ALLOC(sizeof(Point)); // calloc(1, sizeof(Point));
 	point->x = x, point->y = y;
 	return point;
 }

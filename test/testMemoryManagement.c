@@ -37,15 +37,16 @@ int main() {
 	assert(p->y == 6);
 	
 	assert(MEMORY_MANAGEMENT_GET_RETAIN_COUNT(p)==1);
-	assert(MEMORY_MANAGEMENT_GET_RETAIN_COUNT(retain(p))==2);
+	assert( MEMORY_MANAGEMENT_GET_RETAIN_COUNT(retain(p)) ==2);
 	
 	pthread_t threads[2];
 	pthread_create(&(threads[0]), NULL, manyRetains, p);
 	pthread_create(&(threads[1]), NULL, manyReleases, p);
-//	manyRetains(p);
-//	manyReleases(p);
 	pthread_join(threads[0], NULL);
 	pthread_join(threads[1], NULL);
+//	manyRetains(p);
+//	manyReleases(p);
+
 	
 	release(p);
 	release(retain(p));

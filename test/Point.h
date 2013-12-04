@@ -12,7 +12,6 @@
 #include <memory_management/memory_management.h>
 
 typedef struct _point {
-	MEMORY_MANAGEMENT_ENABLE();
 	int x, y;
 } Point;
 
