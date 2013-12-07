@@ -31,14 +31,14 @@ extern "C" {
 /* Use this to release (decrement) a reference */
 #define release(o) MEMORY_MANAGEMENT_RELEASE((o))
 	
-	void *memory_management_alloc(size_t size);
-	void *memory_management_retain(void *);
-	void memory_management_release(void *);
-	unsigned long long memory_management_get_retain_count(const void *);
+	void *memory_management_alloc(size_t size) __attribute__ ((malloc));
+	void *memory_management_retain(void *) __attribute__((nonnull (1)));
+	void memory_management_release(void *) __attribute__((nonnull (1)));
+	unsigned long long memory_management_get_retain_count(const void *) __attribute__((nonnull (1)));
 	
 	/* Use this to set a custom destructor */
-	typedef void (*deallocf)(void *);
-	void memory_management_attributes_set_dealloc_function(void *, deallocf);
+	typedef void (*deallocf)(void *) __attribute__((nonnull (1)));
+	void memory_management_attributes_set_dealloc_function(void *, deallocf) __attribute__((nonnull (1)));
 	
 #ifdef __cplusplus
 }
