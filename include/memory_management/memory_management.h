@@ -34,7 +34,7 @@ extern "C" {
 	void *memory_management_alloc(size_t size) __attribute__ ((malloc));
 	void *memory_management_retain(void *) __attribute__((nonnull (1)));
 	void memory_management_release(void *) __attribute__((nonnull (1)));
-	unsigned long long memory_management_get_retain_count(const void *) __attribute__((nonnull (1)));
+	unsigned int memory_management_get_retain_count(const void *) __attribute__((nonnull (1)));
 	
 	/* Use this to set a custom destructor */
 	typedef void (*deallocf)(void *) __attribute__((nonnull (1)));

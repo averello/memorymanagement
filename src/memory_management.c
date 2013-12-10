@@ -87,7 +87,7 @@ void *memory_management_retain(void *o) {
 	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
 	if (!_MEMORY_MANAGEMENT_CHECK_ENABLED(object) || _MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
 		if (_MEMORY_MANAGEMENT_IS_INVALIDATED(object))
-			assert(0);
+			assert(0 && "Called retain() with invalid pointer.");
 		return NULL;
 	}
 	_MEMORY_MANAGEMENT_ATOMIC_RETAIN(object);
@@ -97,11 +97,14 @@ void *memory_management_retain(void *o) {
 void memory_management_release(void *o) {
 	if (NULL==o) return;
 	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
-	if (!_MEMORY_MANAGEMENT_CHECK_ENABLED(object) || _MEMORY_MANAGEMENT_IS_INVALIDATED(object))
+	if (!_MEMORY_MANAGEMENT_CHECK_ENABLED(object) || _MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
+		if (_MEMORY_MANAGEMENT_IS_INVALIDATED(object))
+			assert(0 && "Called release() with invalided pointer.");
 		return;
+	}
 	
 	unsigned long long result = _MEMORY_MANAGEMENT_ATOMIC_RELEASE(object);
-	assert(result != _MEMORY_MANAGEMENT_INVALID_RETAIN_COUNT);
+	assert(result != _MEMORY_MANAGEMENT_INVALID_RETAIN_COUNT && "Sent retain() to invalid pointer.");
 	if ( result == 0) {
 		_MEMORY_MANAGEMENT_CALL_DEALLOC(object);
 		_MEMORY_MANAGEMENT_INVALIDATE(object);
@@ -120,7 +123,7 @@ void memory_management_attributes_set_dealloc_function(void *o, void (*deallocf)
 	_MEMORY_MANAGEMENT_DEALLOC_ATTRIBUTE(object) = deallocf;
 }
 
-unsigned long long memory_management_get_retain_count(const void *o) {
+unsigned int memory_management_get_retain_count(const void *o) {
 	if (NULL==o) return _MEMORY_MANAGEMENT_INVALID_RETAIN_COUNT;
 	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
 	
