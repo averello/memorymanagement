@@ -12,37 +12,9 @@
 #include <assert.h>
 #include <memory_management/memory_management.h>
 
-//#if __LP64__
-//#define _MEMORY_MANAGEMENT_CANARY_VALUE 0xCA11ACABC001BABE
-//#define _MEMORY_MANAGEMENT_CANARY_BAD_VALUE 0xDEADDADDEADBEEF
-//#else
+
 #define _MEMORY_MANAGEMENT_CANARY_VALUE 0xCA11ACAB
 #define _MEMORY_MANAGEMENT_CANARY_BAD_VALUE 0xDEADDEAD
-//#endif
-
-
-
-//#define ceil_div(x, y) (((x) + (y) - 1) / (y))
-//#define MEMORY_MANAGEMENT_INFERED_OPAQUE_SIZE (ceil_div(( 2 * sizeof(unsigned long long) + ( 1 * sizeof(void*))), sizeof(void *)))
-////( ((2 * sizeof(unsigned long long)) + (1 * sizeof(void*))) / sizeof(void*))
-//
-//#define MEMORY_MANAGEMENT_PROTOTYPE (memory_management_prototype)
-//#define MEMORY_MANAGEMENT_TYPE struct memory_management_attributes
-//#define MEMORY_MANAGEMENT_ISA_NAME _isa
-//
-//#define MEMORY_MANAGEMENT_ISA(o) ((o)->MEMORY_MANAGEMENT_ISA_NAME)
-//MEMORY_MANAGEMENT_TYPE {
-//	void *_opaque[MEMORY_MANAGEMENT_INFERED_OPAQUE_SIZE];
-//};
-//
-//extern MEMORY_MANAGEMENT_TYPE MEMORY_MANAGEMENT_PROTOTYPE;
-//
-//#undef MEMORY_MANAGEMENT_INFERED_OPAQUE_SIZE
-
-/* Use this to set enable memory management on you structure */
-//#define MEMORY_MANAGEMENT_ENABLE() MEMORY_MANAGEMENT_TYPE MEMORY_MANAGEMENT_ISA_NAME
-
-/* Use this to initialize the memory management system on you allocated instance */
 
 #define _MEMORY_MANAGEMENT_CANARY_ATTRIBUTE_NAME canary
 #define _MEMORY_MANAGEMENT_RETAIN_COUNT_ATTRIBUTE_NAME retainCount
