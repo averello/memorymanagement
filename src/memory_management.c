@@ -88,7 +88,7 @@ void *memory_management_retain(void *o) {
 	if (!_MEMORY_MANAGEMENT_CHECK_ENABLED(object) || _MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
 		if (_MEMORY_MANAGEMENT_IS_INVALIDATED(object))
 			assert(0 && "Called retain() with invalid pointer.");
-		return NULL;
+		return o;
 	}
 	_MEMORY_MANAGEMENT_ATOMIC_RETAIN(object);
 	return o;
