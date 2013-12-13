@@ -11,6 +11,7 @@
 #include <string.h>
 #include <assert.h>
 #include <memory_management/memory_management.h>
+#include <errno.h>
 
 
 #define _MEMORY_MANAGEMENT_CANARY_VALUE 0xCA11ACAB
@@ -58,9 +59,10 @@ void *memory_management_retain(void *o) {
 	
 	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
 	if (!_MEMORY_MANAGEMENT_CHECK_ENABLED(object) || _MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
-		if (_MEMORY_MANAGEMENT_IS_INVALIDATED(object))
+		if (_MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
 			assert(0 && "Called retain() with invalid pointer.");
-		return o;
+		}
+		return errno = EFAULT, o;
 	}
 	_MEMORY_MANAGEMENT_ATOMIC_RETAIN(object);
 	return o;
@@ -70,8 +72,10 @@ void memory_management_release(void *o) {
 	if (NULL==o) return;
 	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
 	if (!_MEMORY_MANAGEMENT_CHECK_ENABLED(object) || _MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
-		if (_MEMORY_MANAGEMENT_IS_INVALIDATED(object))
+		if (_MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
 			assert(0 && "Called release() with invalided pointer.");
+		}
+		errno = EFAULT;
 		return;
 	}
 	
@@ -89,8 +93,10 @@ void memory_management_attributes_set_dealloc_function(void *o, void (*deallocf)
 	if (NULL==o) return;
 	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
 	
-	if (!_MEMORY_MANAGEMENT_CHECK_ENABLED(object) || _MEMORY_MANAGEMENT_IS_INVALIDATED(object))
+	if (!_MEMORY_MANAGEMENT_CHECK_ENABLED(object) || _MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
+		errno = EFAULT;
 		return;
+	}
 	
 	_MEMORY_MANAGEMENT_DEALLOC_ATTRIBUTE(object) = deallocf;
 }
@@ -99,8 +105,10 @@ unsigned int memory_management_get_retain_count(const void *o) {
 	if (NULL==o) return _MEMORY_MANAGEMENT_INVALID_RETAIN_COUNT;
 	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
 	
-	if (!_MEMORY_MANAGEMENT_CHECK_ENABLED(object) || _MEMORY_MANAGEMENT_IS_INVALIDATED(object))
+	if (!_MEMORY_MANAGEMENT_CHECK_ENABLED(object) || _MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
+		errno = EFAULT;
 		return _MEMORY_MANAGEMENT_INVALID_RETAIN_COUNT;
+	}
 	
 	return _MEMORY_MANAGEMENT_RETAIN_COUNT_ATTRIBUTE(object);
 }
@@ -108,7 +116,7 @@ unsigned int memory_management_get_retain_count(const void *o) {
 void *memory_management_alloc(size_t size) {
 	size_t totalSize = sizeof(_MEMORY_MANAGEMENT_INTERNAL_TYPE) + size;
 	_MEMORY_MANAGEMENT_INTERNAL_TYPE *o = calloc(1,  totalSize);
-	if (NULL==o) return NULL;
+	if (NULL==o) return errno = ENOMEM, (void *)NULL;
 	_MEMORY_MANAGEMENT_INITIALIZE(o);
 	return o+1;
 }
