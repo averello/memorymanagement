@@ -80,7 +80,7 @@ void memory_management_release(void *o) {
 	}
 	
 	unsigned long long result = _MEMORY_MANAGEMENT_ATOMIC_RELEASE(object);
-	assert(result != _MEMORY_MANAGEMENT_INVALID_RETAIN_COUNT && "Sent retain() to invalid pointer.");
+	assert(result != _MEMORY_MANAGEMENT_INVALID_RETAIN_COUNT && "Sent release() to invalid pointer.");
 	if ( result == 0) {
 		_MEMORY_MANAGEMENT_CALL_DEALLOC(object);
 		_MEMORY_MANAGEMENT_INVALIDATE(object);
