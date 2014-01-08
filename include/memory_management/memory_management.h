@@ -149,6 +149,14 @@ typedef void (*deallocf)(void *) __attribute__((nonnull (1)));
   *	@param[in] function the dealloc function
  */
 void memory_management_attributes_set_dealloc_function(void *object, deallocf function) __attribute__((nonnull (1)));
+
+/*!
+ *	@fn void memory_management_print_stats()
+ *	@brief Print the current stats of the memory management library.
+ *	@ingroup mm
+ *	@details If DEBUG preprocessor variable is not defined then this function has no effect.
+ */
+void memory_management_print_stats();
 	
 #ifdef __cplusplus
 //}
