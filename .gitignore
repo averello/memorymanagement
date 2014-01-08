@@ -164,3 +164,4 @@ doc/Doxyfile.warnings
 *.so
 bin/*
 lib/*.a
+memorymanagement.xcodeproj/project.xcworkspace/xcshareddata/memorymanagement.xccheckout
