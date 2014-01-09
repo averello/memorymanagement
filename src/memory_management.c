@@ -134,6 +134,12 @@ void memory_management_attributes_set_dealloc_function(void *o, void (*deallocf)
 	_MEMORY_MANAGEMENT_DEALLOC_ATTRIBUTE(object) = deallocf;
 }
 
+int memory_management_enabled(void *o) {
+	if (NULL==o) return 0;
+	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
+	return _MEMORY_MANAGEMENT_CHECK_ENABLED(object);
+}
+
 unsigned int memory_management_get_retain_count(const void *o) {
 	if (NULL==o) return _MEMORY_MANAGEMENT_INVALID_RETAIN_COUNT;
 	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
@@ -147,6 +153,8 @@ unsigned int memory_management_get_retain_count(const void *o) {
 }
 
 void *memory_management_alloc(size_t size) {
+	if (size == 0) return errno = EINVAL, NULL;
+	
 	size_t totalSize = sizeof(_MEMORY_MANAGEMENT_INTERNAL_TYPE) + size;
 	_MEMORY_MANAGEMENT_INTERNAL_TYPE *o = calloc(1,  totalSize);
 	if (NULL==o) return errno = ENOMEM, (void *)NULL;
@@ -160,6 +168,40 @@ void *memory_management_alloc(size_t size) {
 	pthread_mutex_unlock(&guardian);
 #endif
 	return o+1;
+}
+
+void *memory_management_copy(void *o, MemoryManagementDomain domain) {
+	if (NULL==o) return errno = EINVAL, NULL;
+	if (domain>MemoryManagementDomains) return errno = EINVAL, NULL;
+	
+	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
+	if (!_MEMORY_MANAGEMENT_CHECK_ENABLED(object) || _MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
+		if (_MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
+			assert(0 && "Called copy() on invalided pointer.");
+		}
+		return errno = EFAULT, NULL;
+	}
+	
+	switch (domain) {
+		case MemoryManagementDomainManaged: {
+			size_t userDataSize = object->size - sizeof(_MEMORY_MANAGEMENT_INTERNAL_TYPE);
+			void *copyUser = MEMORY_MANAGEMENT_ALLOC(userDataSize);
+			if (NULL==copyUser) return errno = ENOMEM, (void *)NULL;
+			memcpy(copyUser, object+1, userDataSize);
+			return copyUser;
+		}
+		case MemoryManagementDomainUnmanaged: {
+			size_t userDataSize = object->size - sizeof(_MEMORY_MANAGEMENT_INTERNAL_TYPE);
+			void *copy = calloc(1,  userDataSize);
+			if (NULL==copy) return errno = ENOMEM, (void *)NULL;
+			memcpy(copy, object+1, userDataSize);
+			return copy;
+		}
+	
+		default:
+			break;
+	}
+	return NULL;
 }
 
 void memory_management_print_stats() {

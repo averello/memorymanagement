@@ -27,6 +27,7 @@ double my_gettimeofday(){
 
 void *manyRetains(void *arg);
 void *manyReleases(void *arg);
+void testCopy();
 
 #define TIMES 100000000
 
@@ -49,14 +50,43 @@ int main() {
 //	manyReleases(p);
 	
 //	for (int i=0; i<TIMES; i++) release(allocatePoint(rand(), rand()));
-
 	
 	release(p);
 	release(retain(p));
 	release(p);
 	
+	testCopy();
+	
 	memory_management_print_stats();
 	return 0;
+}
+
+void testCopy() {
+	Point *point = allocatePoint(42, 43);
+	
+	retain(point);
+	assert(MEMORY_MANAGEMENT_GET_RETAIN_COUNT(point) == 2);
+	
+	Point *managedCopyPoint = MEMORY_MANAGEMENT_COPY(point, MemoryManagementDomainManaged);
+	assert(managedCopyPoint != NULL);
+	assert(MEMORY_MANAGEMENT_ENABLED(managedCopyPoint) != 0);
+	assert(MEMORY_MANAGEMENT_GET_RETAIN_COUNT(managedCopyPoint) == 1);
+	
+	Point *unmanagedCopyPoint = MEMORY_MANAGEMENT_COPY(managedCopyPoint, MemoryManagementDomainUnmanaged);
+	assert(unmanagedCopyPoint != NULL);
+	assert(MEMORY_MANAGEMENT_ENABLED(unmanagedCopyPoint) == 0);
+	
+	Point *error = MEMORY_MANAGEMENT_COPY(point, 42);
+	assert(error == NULL);
+	
+	
+	Point *tryManagedCopyPoint = MEMORY_MANAGEMENT_COPY(unmanagedCopyPoint, MemoryManagementDomainManaged);
+	assert(tryManagedCopyPoint == NULL);
+	
+	free(unmanagedCopyPoint);
+	release(managedCopyPoint);
+	release(point);
+	release(point);
 }
 
 void *manyRetains(void *arg) {

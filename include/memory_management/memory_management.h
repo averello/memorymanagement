@@ -4,8 +4,13 @@
  *  @details This module used to manage memory using a reference count system.
  *
  *  Created by @author George Boumis
+ *
+ *  @date 2014/01/09.
+ *	@version 1.1
+ *
  *  @date 2013/10/12.
  *	@version 1.0
+ *
  *  @copyright Copyright (c) 2013 George Boumis <developer.george.boumis@gmail.com>. All rights reserved.
  *
  *  @defgroup mm Memory Management Module
@@ -46,6 +51,13 @@
 #ifdef __cplusplus
 //extern "C" {
 #endif
+		
+enum MemoryManagementDomain {
+	MemoryManagementDomainManaged = 0,
+	MemoryManagementDomainUnmanaged,
+	MemoryManagementDomains
+};
+typedef unsigned int MemoryManagementDomain;
 
 #define MEMORY_MANAGEMENT_RETAIN(o) memory_management_retain((o))
 #define MEMORY_MANAGEMENT_RELEASE(o) memory_management_release((o))
@@ -71,9 +83,29 @@
  *  @def MEMORY_MANAGEMENT_ALLOC(size)
  *	@brief Allocates a new instance with memory management enabled.
  *  @ingroup mm
+ *	@param[in] size the size to be allocated
  *	@returns the allocated instance
  */
 #define MEMORY_MANAGEMENT_ALLOC(size) memory_management_alloc((size))
+
+/*!
+ *  @def MEMORY_MANAGEMENT_COPY(object,domain)
+ *	@brief Copies the object in a new instance with memory management enabled or not depending on domain specified.
+ *  @ingroup mm
+ *	@param[in] object the object to be copied
+  *	@param[in] domain how the copy should be done
+ *	@returns the copied instance
+ */
+#define MEMORY_MANAGEMENT_COPY(object,domain) memory_management_copy(object,domain)
+	
+/*!
+ *  @def MEMORY_MANAGEMENT_ENABLED(object)
+ *	@brief Checks whether a pointer has memory management enabled.
+ *  @ingroup mm
+ *	@param[in] object the object to check
+ *	@returns a boolean indicating wether the object has memory management enabled.
+ */
+#define MEMORY_MANAGEMENT_ENABLED(object) memory_management_enabled(object)
 
 /*!
  *  @def retain(o)
@@ -98,6 +130,25 @@
  *	@returns  If successful this function return a pointer to allocated memory. If there is an error, they return a `NULL` pointer and set errno to **ENOMEM**.
  */
 void *memory_management_alloc(size_t size) __attribute__ ((malloc));
+
+/*!
+ *  @fn void *memory_management_copy(void *object) __attribute__ ((malloc,nonnull (1)))
+ *  @brief Copies an object.
+ *  @ingroup mm
+ *	@param[in] object the object to be copied
+  *	@param[in] domain how the copy should be made
+ *	@returns  If successful this function return a pointer to allocated memory. If there is an error, they return a `NULL` pointer and set errno to **ENOMEM**.
+ */
+void *memory_management_copy(void *object, MemoryManagementDomain domain) __attribute__ ((malloc,nonnull (1)));
+
+/*!
+ *  @fn memory_management_enabled(void *object) __attribute__ ((nonnull (1)))
+ *  @brief Checks an object.
+ *  @ingroup mm
+ *	@param[in] object the object to be checked
+ *	@returns a boolean indicating wether the object has memory management enabled.
+ */
+int memory_management_enabled(void *object) __attribute__ ((nonnull (1)));
 
 /*!
  *  @fn void *memory_management_retain(void *object) __attribute__((nonnull (1)))
