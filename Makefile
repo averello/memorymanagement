@@ -115,8 +115,8 @@ ${LIB}/lib${LIB_NAME}.so : $(SONAME)
 ${LIB}/lib${LIB_NAME}.so.$(MAJORVERSION) : $(REALNAME)
 
 ${LIB}/lib${LIB_NAME}.so.$(MAJORVERSION).$(MINORVERSION).$(RELEASENUMBER) : $(patsubst ${SRC}/%.c,${OBJ}/%.o,$(wildcard ${SRC}/*.c))
-	#$(CC) $(CFLAGS_PRIV) $(SHAREDFLAGS_PRIV) $(LIBSHAREDFLAGS) -o $@  $? -lc -lpthread
-	$(LD) $(LIBSHAREDFLAGS) -o $@ $? -lc -lpthread
+	$(CC) $(CFLAGS_PRIV) $(SHAREDFLAGS_PRIV) $(LIBSHAREDFLAGS) -o $@  $? -lc -lpthread
+	#$(LD) $(LIBSHAREDFLAGS) -o $@ $? -lc -lpthread
 	$(STRIP) $@
 
 # +------------------+
