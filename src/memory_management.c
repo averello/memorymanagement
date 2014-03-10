@@ -57,11 +57,6 @@ long _total_deallocations = 0;
 
 pthread_mutex_t guardian = PTHREAD_MUTEX_INITIALIZER;
 
-//__thread size_t _total_thread_live_memory = 0;
-#define STATISTIC_DATA size_t size;
-
-#else
-#define STATISTIC_DATA
 #endif /* DEBUG */
 
 _MEMORY_MANAGEMENT_INTERNAL_TYPE {
@@ -74,10 +69,8 @@ _MEMORY_MANAGEMENT_INTERNAL_TYPE {
 _MEMORY_MANAGEMENT_INTERNAL_TYPE _MEMORY_MANAGEMENT_PROTOTYPE_INTERNAL = {
 	1ULL,
 	_MEMORY_MANAGEMENT_CANARY_VALUE,
-	NULL
-#ifdef STATS
-	, 0
-#endif
+	NULL,
+	0
 };
 
 void *memory_management_retain(void *o) {
