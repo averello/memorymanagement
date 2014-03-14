@@ -1,10 +1,19 @@
-//
-//  memory_management.c
-//  xfig
-//
-//  Created by George Boumis on 12/10/13.
-//  Copyright (c) 2013 George Boumis. All rights reserved.
-//
+/*!
+ *  @file memory_management.c
+ *  @brief Memory Management Module.
+ *  @details This module used to manage memory using a reference count system.
+ *
+ *  Created by @author George Boumis
+ *
+ *  @date 2014/01/09.
+ *	@version 1.1
+ *
+ *  @date 2013/10/12.
+ *	@version 1.0
+ *
+ *  @copyright Copyright (c) 2013 George Boumis <developer.george.boumis@gmail.com>. All rights reserved.
+ *
+ */
 
 #include <stdio.h>
 #include <stdlib.h>

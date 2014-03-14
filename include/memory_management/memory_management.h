@@ -36,7 +36,7 @@
  *	release(mystruct);
  *	~~~~~~~~~~~~~~~~~
  *	If the reference count hits 0 with this call then the dealloc function (if you specified any) will be called and then the structure will be freed.
- *
+ *	Please refer to [memorymanagement](https://github.com/averello/memorymanagement)
  */
 
 
