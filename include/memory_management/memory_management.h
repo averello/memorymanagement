@@ -5,6 +5,9 @@
  *
  *  Created by @author George Boumis
  *
+ *  @date 2014/03/14.
+ *	@version 1.1.1
+ *
  *  @date 2014/01/09.
  *	@version 1.1
  *
@@ -36,7 +39,7 @@
  *	release(mystruct);
  *	~~~~~~~~~~~~~~~~~
  *	If the reference count hits 0 with this call then the dealloc function (if you specified any) will be called and then the structure will be freed.
- *
+ *	Please refer to [memorymanagement](https://github.com/averello/memorymanagement)
  */
 
 
