@@ -54,7 +54,7 @@
 #ifdef __cplusplus
 //extern "C" {
 #endif
-		
+
 enum MemoryManagementDomain {
 	MemoryManagementDomainManaged = 0,
 	MemoryManagementDomainUnmanaged,
@@ -73,7 +73,7 @@ typedef unsigned int MemoryManagementDomain;
  *	@returns the reference count
  */
 #define MEMORY_MANAGEMENT_GET_RETAIN_COUNT(o) memory_management_get_retain_count((o))
-	
+
 /*!
  *  @def MEMORY_MANAGEMENT_ATTRIBUTE_SET_DEALLOC_FUNCTION(o, function)
  *	@brief Sets a dealloc function for cleanup
@@ -96,11 +96,11 @@ typedef unsigned int MemoryManagementDomain;
  *	@brief Copies the object in a new instance with memory management enabled or not depending on domain specified.
  *  @ingroup mm
  *	@param[in] object the object to be copied
-  *	@param[in] domain how the copy should be done
+ *	@param[in] domain how the copy should be done
  *	@returns the copied instance
  */
 #define MEMORY_MANAGEMENT_COPY(object,domain) memory_management_copy(object,domain)
-	
+
 /*!
  *  @def MEMORY_MANAGEMENT_ENABLED(object)
  *	@brief Checks whether a pointer has memory management enabled.
@@ -139,7 +139,7 @@ void *memory_management_alloc(size_t size) __attribute__ ((malloc));
  *  @brief Copies an object.
  *  @ingroup mm
  *	@param[in] object the object to be copied
-  *	@param[in] domain how the copy should be made
+ *	@param[in] domain how the copy should be made
  *	@returns  If successful this function return a pointer to allocated memory. If there is an error, they return a `NULL` pointer and set errno to **ENOMEM**.
  */
 void *memory_management_copy(void *object, MemoryManagementDomain domain) __attribute__ ((malloc,nonnull (1)));
@@ -200,7 +200,7 @@ typedef void (*deallocf)(void *) __attribute__((nonnull (1)));
  *  @ingroup mm
  *	@details This function sets the dealloc function for the object. The dealloc function is called **immediately** when the reference count reaches 0. The dealloc function should be used to relase any memory retained by the object.
  *	@param[in] object the object
-  *	@param[in] function the dealloc function
+ *	@param[in] function the dealloc function
  */
 void memory_management_attributes_set_dealloc_function(void *object, deallocf function) __attribute__((nonnull (1)));
 
@@ -211,7 +211,7 @@ void memory_management_attributes_set_dealloc_function(void *object, deallocf fu
  *	@details If DEBUG preprocessor variable is not defined then this function has no effect.
  */
 void memory_management_print_stats();
-	
+
 #ifdef __cplusplus
 //}
 #endif /* _cplusplus */

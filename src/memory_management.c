@@ -202,7 +202,7 @@ void *memory_management_copy(void *o, MemoryManagementDomain domain) {
 			memcpy(copy, object+1, userDataSize);
 			return copy;
 		}
-	
+			
 		default:
 			break;
 	}
