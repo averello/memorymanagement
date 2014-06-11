@@ -81,14 +81,14 @@ pthread_mutex_t guardian = PTHREAD_MUTEX_INITIALIZER;
  *	@endinternal
  */
 _MEMORY_MANAGEMENT_INTERNAL_TYPE {
-	unsigned int _MEMORY_MANAGEMENT_RETAIN_COUNT_ATTRIBUTE_NAME; /*!< the reference counter */
+	volatile unsigned int _MEMORY_MANAGEMENT_RETAIN_COUNT_ATTRIBUTE_NAME; /*!< the reference counter */
 	unsigned int _MEMORY_MANAGEMENT_CANARY_ATTRIBUTE_NAME; /*!< the canary value */
 	void (*_MEMORY_MANAGEMENT_DEALLOC_ATTRIBUTE_NAME)(void *); /*!< the optional dealloc function */
 	size_t size; /*!< the size of the object with the size of the header included */
 };
 
 _MEMORY_MANAGEMENT_INTERNAL_TYPE _MEMORY_MANAGEMENT_PROTOTYPE_INTERNAL = {
-	1ULL,
+	1UL,
 	_MEMORY_MANAGEMENT_CANARY_VALUE,
 	NULL,
 	0
