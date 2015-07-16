@@ -40,6 +40,13 @@
  *	~~~~~~~~~~~~~~~~~
  *	If the reference count hits 0 with this call then the dealloc function (if you specified any) will be called and then the structure will be freed.
  *	Please refer to [memorymanagement](https://github.com/averello/memorymanagement)
+ *
+ *
+ * @section warning_sec Precautions
+ * Calling for example retain(0x0001) will crash your application. That is because
+ * internally the library casts the pointer 0x0001 to the internal type and tries
+ * to access a management structure just before the 0x0001 address, which
+ * inevitable leads to a crash.
  */
 
 
@@ -169,11 +176,14 @@ void *memory_management_copy(void *object, MemoryManagementDomain domain) __attr
 
 /*!
  *  @fn memory_management_enabled(void *object) __attribute__ ((nonnull (1)))
- *  @brief Checks an object.
+ *  @brief Checks if an object is managed by @ref mm.
  *  @ingroup mm
  *	@public
  *	@param[in] object the object to be checked
  *	@returns a boolean indicating wether the object has memory management enabled.
+ *	@bug if the pointer passed to this function is not allocated by the library
+ *	then this function could crash.
+ *	@warning Use with caution this function. See bug.
  */
 int memory_management_enabled(void *object) __attribute__ ((nonnull (1)));
 
@@ -189,6 +199,9 @@ int memory_management_enabled(void *object) __attribute__ ((nonnull (1)));
  *	As a convenience, this function returns the object pointer because it may be used in nested expressions.
  *	@param[in] object the object to increment its reference count
  *	@returns the object pointer
+ *	@bug if the pointer passed to this function is not allocated by the library
+ *	then this function could crash with a segmentation fault.
+ *	@warning Use with caution this function. See bug.
  */
 void *memory_management_retain(void *object) __attribute__((nonnull (1)));
 
