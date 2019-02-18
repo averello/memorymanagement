@@ -258,7 +258,7 @@ void memory_management_attributes_set_dealloc_function(void *object, deallocf fu
  *	@public
  *	@details If DEBUG preprocessor variable is not defined then this function has no effect.
  */
-void memory_management_print_stats();
+void memory_management_print_stats(void);
 
 #ifdef __cplusplus
 }
