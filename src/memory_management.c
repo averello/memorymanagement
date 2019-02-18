@@ -5,6 +5,9 @@
  *
  *  Created by @author George Boumis
  *
+ *  @date 2019/02/18.
+ *	@version 1.1.2
+ *
  *  @date 2014/03/14.
  *	@version 1.1.1
  *
@@ -20,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <assert.h>
 #include <memory_management/memory_management.h>
@@ -71,15 +75,23 @@ pthread_mutex_t guardian = PTHREAD_MUTEX_INITIALIZER;
 
 #endif /* DEBUG */
 
+/*!
+ *	@internal
+ *  @struct _memory_management_attributes_internal
+ *	@brief The memory management header
+ *  @ingroup mm
+ *	@details The information saved by the module to manage the memory.
+ *	@endinternal
+ */
 _MEMORY_MANAGEMENT_INTERNAL_TYPE {
-	unsigned int _MEMORY_MANAGEMENT_RETAIN_COUNT_ATTRIBUTE_NAME;
-	unsigned int _MEMORY_MANAGEMENT_CANARY_ATTRIBUTE_NAME;
-	void (*_MEMORY_MANAGEMENT_DEALLOC_ATTRIBUTE_NAME)(void *);
-	size_t size;
+	volatile unsigned int _MEMORY_MANAGEMENT_RETAIN_COUNT_ATTRIBUTE_NAME; /*!< the reference counter */
+	unsigned int _MEMORY_MANAGEMENT_CANARY_ATTRIBUTE_NAME; /*!< the canary value */
+	void (*_MEMORY_MANAGEMENT_DEALLOC_ATTRIBUTE_NAME)(void *); /*!< the optional dealloc function */
+	size_t size; /*!< the size of the object with the size of the header included */
 };
 
 _MEMORY_MANAGEMENT_INTERNAL_TYPE _MEMORY_MANAGEMENT_PROTOTYPE_INTERNAL = {
-	1ULL,
+	1UL,
 	_MEMORY_MANAGEMENT_CANARY_VALUE,
 	NULL,
 	0
@@ -158,8 +170,22 @@ unsigned int memory_management_get_retain_count(const void *o) {
 }
 
 void *memory_management_alloc(size_t size) {
+	/* An zero size is not accepted */
 	if (size == 0) return errno = EINVAL, NULL;
 	
+	/* A size with value SIZE_MAX cannot be used because the library uses its 
+	 own header. */
+	if (size == SIZE_MAX)
+		return errno = EINVAL, NULL;
+	
+	/* size must be at most SIZE_MAX - sizeof(type) - 1 
+	 assuring that the totalSize will not overflow
+	 */
+	size_t minimumAcceptedSize = (SIZE_MAX - sizeof(_MEMORY_MANAGEMENT_INTERNAL_TYPE));
+	if (size >= minimumAcceptedSize)
+		return errno = EINVAL, NULL;
+	
+	/* Allocate the header plus the requested size */
 	size_t totalSize = sizeof(_MEMORY_MANAGEMENT_INTERNAL_TYPE) + size;
 	_MEMORY_MANAGEMENT_INTERNAL_TYPE *o = calloc(1,  totalSize);
 	if (NULL==o) return errno = ENOMEM, (void *)NULL;
@@ -187,26 +213,24 @@ void *memory_management_copy(void *o, MemoryManagementDomain domain) {
 		return errno = EFAULT, NULL;
 	}
 	
-	switch (domain) {
-		case MemoryManagementDomainManaged: {
-			size_t userDataSize = object->size - sizeof(_MEMORY_MANAGEMENT_INTERNAL_TYPE);
-			void *copyUser = MEMORY_MANAGEMENT_ALLOC(userDataSize);
-			if (NULL==copyUser) return errno = ENOMEM, (void *)NULL;
-			memcpy(copyUser, object+1, userDataSize);
-			return copyUser;
-		}
-		case MemoryManagementDomainUnmanaged: {
-			size_t userDataSize = object->size - sizeof(_MEMORY_MANAGEMENT_INTERNAL_TYPE);
-			void *copy = calloc(1,  userDataSize);
-			if (NULL==copy) return errno = ENOMEM, (void *)NULL;
-			memcpy(copy, object+1, userDataSize);
-			return copy;
-		}
+	size_t userDataSize = object->size - sizeof(_MEMORY_MANAGEMENT_INTERNAL_TYPE);
+	void *copy = NULL;
 	
+	switch (domain) {
+		case MemoryManagementDomainManaged:
+			copy = MEMORY_MANAGEMENT_ALLOC(userDataSize);
+			break;
+		case MemoryManagementDomainUnmanaged:
+			copy = malloc(1 * userDataSize);
+			break;
+			
 		default:
 			break;
 	}
-	return NULL;
+	
+	if (NULL==copy) return errno = ENOMEM, (void *)NULL;
+	memcpy(copy, object+1, userDataSize);
+	return copy;
 }
 
 void memory_management_print_stats() {
