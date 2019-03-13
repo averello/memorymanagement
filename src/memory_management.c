@@ -102,10 +102,12 @@ _MEMORY_MANAGEMENT_INTERNAL_TYPE _MEMORY_MANAGEMENT_PROTOTYPE_INTERNAL = {
 };
 
 void *memory_management_retain(void *o) {
+#if NULLABILITY_CHECK
     if (NULL==o) {
         errno = EINVAL;
         return NULL;
     }
+#endif
 	
 	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
 	if (!_MEMORY_MANAGEMENT_CHECK_ENABLED(object) || _MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
@@ -120,10 +122,12 @@ void *memory_management_retain(void *o) {
 }
 
 void memory_management_release(void *o) {
+#if NULLABILITY_CHECK
     if (NULL==o) {
         errno = EINVAL;
         return;
     }
+#endif
 	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
 	if (!_MEMORY_MANAGEMENT_CHECK_ENABLED(object) || _MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
 		if (_MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
@@ -151,10 +155,12 @@ void memory_management_release(void *o) {
 }
 
 void memory_management_attributes_set_dealloc_function(void *o, void (*deallocf)(void *)) {
+#if NULLABILITY_CHECK
     if (NULL==o) {
         errno = EINVAL;
         return;
     }
+#endif
 	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
 	
 	if (!_MEMORY_MANAGEMENT_CHECK_ENABLED(object) || _MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
@@ -166,16 +172,22 @@ void memory_management_attributes_set_dealloc_function(void *o, void (*deallocf)
 }
 
 bool memory_management_enabled(void *o) {
+#if NULLABILITY_CHECK
     if (NULL==o) {
         errno = EINVAL;
         return false;
     }
+#endif
 	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
 	return _MEMORY_MANAGEMENT_CHECK_ENABLED(object);
 }
 
 unsigned int memory_management_get_retain_count(const void *o) {
-	if (NULL==o) return _MEMORY_MANAGEMENT_INVALID_RETAIN_COUNT;
+#if NULLABILITY_CHECK
+    if (NULL==o) {
+        return _MEMORY_MANAGEMENT_INVALID_RETAIN_COUNT;
+    }
+#endif
 	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
 	
 	if (!_MEMORY_MANAGEMENT_CHECK_ENABLED(object) || _MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
@@ -229,10 +241,12 @@ void *memory_management_alloc(size_t size) {
 }
 
 void *memory_management_copy(void *o, MemoryManagementDomain domain) {
+#if NULLABILITY_CHECK
     if (NULL==o) {
         errno = EINVAL;
         return (void *)NULL;
     }
+#endif
     if (domain>MemoryManagementDomains) {
         errno = EINVAL;
         return (void *)NULL;
