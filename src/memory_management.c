@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 #include <assert.h>
 #include <memory_management/memory_management.h>
@@ -50,7 +51,7 @@
 #define _MEMORY_MANAGEMENT_INITIALIZE(o) ((*o) = _MEMORY_MANAGEMENT_PROTOTYPE_INTERNAL)
 
 #define _MEMORY_MANAGEMENT_CANARY_ATTRIBUTE(o) (o)->_MEMORY_MANAGEMENT_CANARY_ATTRIBUTE_NAME
-#define _MEMORY_MANAGEMENT_CHECK_ENABLED(o) (_MEMORY_MANAGEMENT_CANARY_ATTRIBUTE(o) == _MEMORY_MANAGEMENT_CANARY_VALUE)
+#define _MEMORY_MANAGEMENT_CHECK_ENABLED(o) ((bool)(_MEMORY_MANAGEMENT_CANARY_ATTRIBUTE(o) == _MEMORY_MANAGEMENT_CANARY_VALUE))
 #define _MEMORY_MANAGEMENT_IS_INVALIDATED(o) (_MEMORY_MANAGEMENT_CANARY_ATTRIBUTE(o) == _MEMORY_MANAGEMENT_CANARY_BAD_VALUE)
 #define _MEMORY_MANAGEMENT_INVALIDATE(o) (_MEMORY_MANAGEMENT_CANARY_ATTRIBUTE(o) = _MEMORY_MANAGEMENT_CANARY_BAD_VALUE)
 
@@ -101,21 +102,28 @@ _MEMORY_MANAGEMENT_INTERNAL_TYPE _MEMORY_MANAGEMENT_PROTOTYPE_INTERNAL = {
 };
 
 void *memory_management_retain(void *o) {
-	if (NULL==o) return NULL;
+    if (NULL==o) {
+        errno = EINVAL;
+        return NULL;
+    }
 	
 	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
 	if (!_MEMORY_MANAGEMENT_CHECK_ENABLED(object) || _MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
 		if (_MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
 			assert(0 && "Called retain() on invalided pointer.");
 		}
-		return errno = EFAULT, o;
+        errno = EFAULT;
+		return o;
 	}
 	_MEMORY_MANAGEMENT_ATOMIC_RETAIN(object);
 	return o;
 }
 
 void memory_management_release(void *o) {
-	if (NULL==o) return;
+    if (NULL==o) {
+        errno = EINVAL;
+        return;
+    }
 	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
 	if (!_MEMORY_MANAGEMENT_CHECK_ENABLED(object) || _MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
 		if (_MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
@@ -143,7 +151,10 @@ void memory_management_release(void *o) {
 }
 
 void memory_management_attributes_set_dealloc_function(void *o, void (*deallocf)(void *)) {
-	if (NULL==o) return;
+    if (NULL==o) {
+        errno = EINVAL;
+        return;
+    }
 	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
 	
 	if (!_MEMORY_MANAGEMENT_CHECK_ENABLED(object) || _MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
@@ -154,8 +165,11 @@ void memory_management_attributes_set_dealloc_function(void *o, void (*deallocf)
 	_MEMORY_MANAGEMENT_DEALLOC_ATTRIBUTE(object) = deallocf;
 }
 
-int memory_management_enabled(void *o) {
-	if (NULL==o) return 0;
+bool memory_management_enabled(void *o) {
+    if (NULL==o) {
+        errno = EINVAL;
+        return false;
+    }
 	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
 	return _MEMORY_MANAGEMENT_CHECK_ENABLED(object);
 }
@@ -174,24 +188,34 @@ unsigned int memory_management_get_retain_count(const void *o) {
 
 void *memory_management_alloc(size_t size) {
 	/* An zero size is not accepted */
-	if (size == 0) return errno = EINVAL, NULL;
+    if (size == 0) {
+        errno = EINVAL;
+        return (void *)NULL;
+    }
 	
 	/* A size with value SIZE_MAX cannot be used because the library uses its 
 	 own header. */
-	if (size == SIZE_MAX)
-		return errno = EINVAL, NULL;
+    if (size == SIZE_MAX) {
+        errno = EINVAL;
+        return (void *)NULL;
+    }
 	
 	/* size must be at most SIZE_MAX - sizeof(type) - 1 
 	 assuring that the totalSize will not overflow
 	 */
-	size_t minimumAcceptedSize = (SIZE_MAX - sizeof(_MEMORY_MANAGEMENT_INTERNAL_TYPE));
-	if (size >= minimumAcceptedSize)
-		return errno = EINVAL, NULL;
+	const size_t minimumAcceptedSize = (SIZE_MAX - sizeof(_MEMORY_MANAGEMENT_INTERNAL_TYPE));
+    if (size >= minimumAcceptedSize) {
+        errno = EINVAL;
+        return (void *)NULL;
+    }
 	
 	/* Allocate the header plus the requested size */
-	size_t totalSize = sizeof(_MEMORY_MANAGEMENT_INTERNAL_TYPE) + size;
+	const size_t totalSize = sizeof(_MEMORY_MANAGEMENT_INTERNAL_TYPE) + size;
 	_MEMORY_MANAGEMENT_INTERNAL_TYPE *o = calloc(1,  totalSize);
-	if (NULL==o) return errno = ENOMEM, (void *)NULL;
+    if (NULL==o) {
+        errno = ENOMEM;
+        return (void *)NULL;
+    }
 	_MEMORY_MANAGEMENT_INITIALIZE(o);
 	o->size = totalSize;
 #ifdef STATS
@@ -205,15 +229,22 @@ void *memory_management_alloc(size_t size) {
 }
 
 void *memory_management_copy(void *o, MemoryManagementDomain domain) {
-	if (NULL==o) return errno = EINVAL, NULL;
-	if (domain>MemoryManagementDomains) return errno = EINVAL, NULL;
+    if (NULL==o) {
+        errno = EINVAL;
+        return (void *)NULL;
+    }
+    if (domain>MemoryManagementDomains) {
+        errno = EINVAL;
+        return (void *)NULL;
+    }
 	
 	_MEMORY_MANAGEMENT_DECLARE_INTERNAL_VARIABLE(object) = _MEMORY_MANAGEMENT_INTERNAL_CAST(o);
 	if (!_MEMORY_MANAGEMENT_CHECK_ENABLED(object) || _MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
 		if (_MEMORY_MANAGEMENT_IS_INVALIDATED(object)) {
 			assert(0 && "Called copy() on invalided pointer.");
 		}
-		return errno = EFAULT, NULL;
+        errno = EFAULT;
+        return (void *)NULL;
 	}
 	
 	size_t userDataSize = object->size - sizeof(_MEMORY_MANAGEMENT_INTERNAL_TYPE);
@@ -231,7 +262,10 @@ void *memory_management_copy(void *o, MemoryManagementDomain domain) {
 			break;
 	}
 	
-	if (NULL==copy) return errno = ENOMEM, (void *)NULL;
+    if (NULL==copy) {
+        errno = ENOMEM;
+        return (void *)NULL;
+    }
 	memcpy(copy, object+1, userDataSize);
 	return copy;
 }

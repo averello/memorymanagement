@@ -63,6 +63,7 @@
 #define MEMORY_MANAGEMENT_ENVIRONMENT 1
 
 #include <pthread.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -191,7 +192,7 @@ void *memory_management_copy(void *object, MemoryManagementDomain domain) __attr
  *	then this function could crash.
  *	@warning Use with caution this function. See bug.
  */
-int memory_management_enabled(void *object) __attribute__ ((nonnull (1)));
+bool memory_management_enabled(void *object) __attribute__ ((nonnull (1)));
 
 /*!
  *  @fn void *memory_management_retain(void *object) __attribute__((nonnull (1)))
@@ -261,7 +262,7 @@ void memory_management_attributes_set_dealloc_function(void *object, deallocf fu
  *	@public
  *	@details If DEBUG preprocessor variable is not defined then this function has no effect.
  */
-void memory_management_print_stats();
+void memory_management_print_stats(void);
 
 #ifdef __cplusplus
 }
