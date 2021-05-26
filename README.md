@@ -20,8 +20,20 @@ Now open the file html/index.html
 
 Build
 -----
-Use `make` directly in the root of the project.  
+
+### Using makefile
+Use `make` directly in the root of the project.
 The resulting files will be placed in the directory `lib`.
+
+### Using cmake
+
+```bash
+mkdir build
+cd build
+cmake ..
+make -j
+make install
+```
 
 
 Usage
@@ -38,7 +50,7 @@ MEMORY_MANAGEMENT_ATTRIBUTE_SET_DEALLOC_FUNCTION(mystruct, deallocf);
 ```c
 retain(mystruct);
 ```
-4) When you finished with it:
+4) When you are finished with it:
 ```c
 release(mystruct);
 ```
