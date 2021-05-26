@@ -1,4 +1,3 @@
-CC = gcc
 CFLAGS_PRIV = -Wall -Wextra -g3 -pedantic -std=c99 -I${INC} -D_XOPEN_SOURCE=700 $(CFLAGS)
 LDFLAGS_PRIV = -L$(LIB) -lmemorymanagement $(LDFLAGS)
 SHAREDFLAGS_PRIV=-fPIC -shared $(SHAREDFLAGS)
@@ -30,9 +29,9 @@ ifeq ($(UNAME), Darwin)
 endif
 
 
-MAJORVERSION=0
+MAJORVERSION=1
 MINORVERSION=1
-RELEASENUMBER=1
+RELEASENUMBER=4
 SONAME = ${LIB}/lib${LIB_NAME}.so.$(MAJORVERSION)
 REALNAME = ${LIB}/lib${LIB_NAME}.so.$(MAJORVERSION).$(MINORVERSION).$(RELEASENUMBER)
 SHARED = ${LIB}/lib${LIB_NAME}.so
@@ -60,7 +59,7 @@ tests : directories libstatic $(TESTS)
 	done
 	@#	./"$$test" \
 
-test% : $(OBJ)/Point.o $(BIN)/test% 
+test% : $(OBJ)/Point.o $(BIN)/test%
 	@echo "**** Testing $@";
 	@$(BIN)/$@
 	@echo "end of $@";
@@ -107,7 +106,7 @@ ${BIN}/% : ${OBJ}/%.o
 	${CC} -o $@ $< ${LDFLAGS_PRIV}
 
 
-${LIB}/lib${LIB_NAME}.a : $(OBJ)/memory_management.o 
+${LIB}/lib${LIB_NAME}.a : $(OBJ)/memory_management.o
 	${AR} r ${LIB}/lib${LIB_NAME}.a $<
 
 ${LIB}/lib${LIB_NAME}.so : $(SONAME)
