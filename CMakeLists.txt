@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10.2)
 
-project(memorymanagement VERSION 1.1.3)
+project(memorymanagement VERSION 1.1.4)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 

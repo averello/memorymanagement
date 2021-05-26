@@ -5,6 +5,9 @@
  *
  *  Created by @author George Boumis
  *
+ *  @date 2021/05/26.
+ *	@version 1.1.4
+ *
  *  @date 2019/02/18.
  *	@version 1.1.3
  *
@@ -20,7 +23,7 @@
  *  @date 2013/10/12.
  *	@version 1.0
  *
- *  @copyright Copyright (c) 2013 George Boumis <developer.george.boumis@gmail.com>. All rights reserved.
+ *  @copyright Copyright (c) 2013-2021 George Boumis <developer.george.boumis@gmail.com>. All rights reserved.
  *
  *  @defgroup mm Memory Management Module
  *
@@ -83,7 +86,7 @@ enum MemoryManagementDomain {
 										*/
 	MemoryManagementDomainUnmanaged,	/*!< Option indicating that the copy
 										 should not be managed by the memory
-										 management module but directly by 
+										 management module but directly by
 										 free(3)
 										 */
 	MemoryManagementDomains
