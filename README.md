@@ -5,8 +5,10 @@ A little library in C for managing memory based on a reference counting system.
 
 Documentation
 -------------
-This project uses [doxygen](http://www.stack.nl/~dimitri/doxygen/index.html) (http://www.stack.nl/~dimitri/doxygen/index.html) for the code documentation.
-Just point doxygen to the doc/Doxyfile and the html documentation will be generated.
+This project uses [doxygen](http://www.stack.nl/~dimitri/doxygen/index.html)
+(http://www.stack.nl/~dimitri/doxygen/index.html) for the code documentation.
+Just point doxygen to the doc/Doxyfile and the html documentation will be
+generated.
 
 Command line exemple :
 ```bash
@@ -15,6 +17,12 @@ doxygen Doxyfile
 ```
 
 Now open the file html/index.html
+
+Build
+-----
+Use `make` directly in the root of the project.  
+The resulting files will be placed in the directory `lib`.
+
 
 Usage
 -----
